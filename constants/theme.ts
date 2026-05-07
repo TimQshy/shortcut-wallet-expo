@@ -1,53 +1,62 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
-import { Platform } from 'react-native';
-
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: '#1b1c1a',
+    background: '#faf9f5',
+    tint: '#3c2a21',
+    icon: '#4f4540',
+    tabIconDefault: '#4f4540',
+    tabIconSelected: '#3c2a21',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    text: '#f2f1ed',
+    background: '#1b1c1a',
+    tint: '#dec1b3',
+    icon: '#aa9084',
+    tabIconDefault: '#aa9084',
+    tabIconSelected: '#dec1b3',
   },
 };
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  },
-});
+export const C = {
+  background: '#faf9f5',
+  onBackground: '#1b1c1a',
+  surface: '#faf9f5',
+  surfaceContainerLow: '#f4f4f0',
+  surfaceContainer: '#efeeea',
+  surfaceContainerHigh: '#e9e8e4',
+  onSurface: '#1b1c1a',
+  onSurfaceVariant: '#4f4540',
+  outline: '#81756f',
+  outlineVariant: '#d3c3bd',
+  primary: '#25160e',
+  onPrimary: '#ffffff',
+  primaryContainer: '#3c2a21',
+  onPrimaryContainer: '#aa9084',
+  secondary: '#7c5639',
+  onSecondary: '#ffffff',
+  secondaryContainer: '#fecaa5',
+  income: '#2d6a4f',
+  incomeContainer: '#d8f3dc',
+  expense: '#b5451b',
+  expenseContainer: '#fde8df',
+  error: '#ba1a1a',
+  errorContainer: '#ffdad6',
+  onError: '#ffffff',
+};
+
+export const R = {
+  sm: 4,
+  md: 8,
+  lg: 16,
+  xl: 24,
+  full: 999,
+};
+
+export const S = {
+  containerMargin: 24,
+  gutter: 16,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+};
