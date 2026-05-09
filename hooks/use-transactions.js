@@ -47,6 +47,23 @@ export const useTransactions = (userId) => {
     }
   };
 
+  const updateTransaction = async (id, { title, amount, category }) => {
+    try {
+      const response = await fetch(`${API_URL}/transactions/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, amount, category }),
+      });
+      if (!response.ok) throw new Error("Failed to update transaction");
+      await loadData();
+      return true;
+    } catch (error) {
+      console.error("Error updating transaction:", error);
+      Alert.alert("Error", error.message);
+      return false;
+    }
+  };
+
   const deleteTransaction = async (id) => {
     try {
       const response = await fetch(`${API_URL}/transactions/${id}`, { method: "DELETE" });
@@ -59,5 +76,5 @@ export const useTransactions = (userId) => {
     }
   };
 
-  return { transactions, summary, isLoading, loadData, createTransaction, deleteTransaction };
+  return { transactions, summary, isLoading, loadData, createTransaction, updateTransaction, deleteTransaction };
 };

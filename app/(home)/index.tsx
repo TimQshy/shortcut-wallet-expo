@@ -140,6 +140,17 @@ export default function HomePage() {
                 <Pressable
                   key={tx.id}
                   style={styles.txRow}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/(home)/edit' as any,
+                      params: {
+                        id: tx.id,
+                        title: tx.title,
+                        amount: tx.amount,
+                        category: tx.category,
+                      },
+                    })
+                  }
                   onLongPress={() =>
                     Alert.alert('Delete', `Delete "${tx.title}"?`, [
                       { text: 'Cancel', style: 'cancel' },
