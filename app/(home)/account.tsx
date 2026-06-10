@@ -226,10 +226,22 @@ export default function AccountPage() {
         )}
       </ScrollView>
 
-      {/* FAB — two action buttons */}
+      {/* FAB — action buttons */}
       <View style={styles.fabContainer}>
         <Pressable
-          style={[styles.fabSmall]}
+          style={styles.fabSmall}
+          onPress={() =>
+            router.push({
+              pathname: '/(home)/import-pdf' as any,
+              params: { accountId, accountName },
+            })
+          }
+        >
+          <Ionicons name="document-attach-outline" size={20} color="#ffffff" />
+          <Text style={styles.fabSmallText}>Выписка</Text>
+        </Pressable>
+        <Pressable
+          style={styles.fabSmall}
           onPress={() =>
             router.push({
               pathname: '/(home)/create-note' as any,
