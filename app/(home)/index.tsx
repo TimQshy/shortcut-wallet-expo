@@ -49,12 +49,6 @@ export default function AccountsPage() {
           </View>
           <View style={styles.headerActions}>
             <Pressable
-              style={styles.budgetBtn}
-              onPress={() => router.push('/(home)/budget' as any)}
-            >
-              <Ionicons name="calculator-outline" size={20} color={C.onPrimaryContainer} />
-            </Pressable>
-            <Pressable
               style={styles.avatar}
               onPress={() =>
                 Alert.alert('Выйти', 'Вы уверены?', [
@@ -158,14 +152,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: S.sm,
-  },
-  budgetBtn: {
-    width: 46,
-    height: 46,
-    borderRadius: R.full,
-    backgroundColor: C.primaryContainer,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   greeting: {
     fontSize: 11,
