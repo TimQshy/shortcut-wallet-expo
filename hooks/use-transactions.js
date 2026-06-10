@@ -2,25 +2,27 @@ import { useCallback, useState } from "react";
 import { Alert } from "react-native";
 import { API_URL } from "../constants/api";
 
-export const useTransactions = (userId) => {
+export const useTransactions = (userId, accountId) => {
   const [transactions, setTransactions] = useState([]);
   const [summary, setSummary] = useState({ balance: 0, income: 0, expenses: 0 });
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchTransactions = useCallback(async () => {
-    const response = await fetch(`${API_URL}/transactions/${userId}`);
+    if (!accountId) return;
+    const response = await fetch(`${API_URL}/transactions/${userId}/${accountId}`);
     const data = await response.json();
     setTransactions(data);
-  }, [userId]);
+  }, [userId, accountId]);
 
   const fetchSummary = useCallback(async () => {
-    const response = await fetch(`${API_URL}/transactions/summary/${userId}`);
+    if (!accountId) return;
+    const response = await fetch(`${API_URL}/transactions/summary/${userId}/${accountId}`);
     const data = await response.json();
     setSummary(data);
-  }, [userId]);
+  }, [userId, accountId]);
 
   const loadData = useCallback(async () => {
-    if (!userId) return;
+    if (!userId || !accountId) return;
     setIsLoading(true);
     try {
       await Promise.all([fetchTransactions(), fetchSummary()]);
@@ -29,14 +31,14 @@ export const useTransactions = (userId) => {
     } finally {
       setIsLoading(false);
     }
-  }, [fetchTransactions, fetchSummary, userId]);
+  }, [fetchTransactions, fetchSummary, userId, accountId]);
 
   const createTransaction = async ({ title, amount, category }) => {
     try {
       const response = await fetch(`${API_URL}/transactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, amount, category, user_id: userId }),
+        body: JSON.stringify({ title, amount, category, user_id: userId, account_id: accountId }),
       });
       if (!response.ok) throw new Error("Failed to create transaction");
       return true;

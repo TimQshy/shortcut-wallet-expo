@@ -1,5 +1,5 @@
 import { useUser } from '@clerk/expo'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
   Text, View, Pressable, StyleSheet, TextInput,
@@ -28,7 +28,9 @@ type TxType = 'expense' | 'income'
 export default function CreatePage() {
   const { user } = useUser()
   const router = useRouter()
-  const { createTransaction } = useTransactions(user?.id)
+  const params = useLocalSearchParams<{ accountId: string; accountName: string }>()
+  const accountId = params.accountId
+  const { createTransaction } = useTransactions(user?.id, accountId)
 
   const [type, setType] = useState<TxType>('expense')
   const [amount, setAmount] = useState('')
