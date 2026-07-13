@@ -1,4 +1,4 @@
-import { useSignIn } from '@clerk/expo'
+import { useClerk, useSignIn } from '@clerk/expo'
 import { Link, useRouter } from 'expo-router'
 import React from 'react'
 import {
@@ -10,7 +10,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { C, R, S } from '../../constants/theme'
 
 export default function SignInPage() {
-  const { signIn, setActive, isLoaded } = useSignIn()
+  const { signIn, isLoaded } = useSignIn()
+  const { setActive } = useClerk()
   const router = useRouter()
 
   const [emailAddress, setEmailAddress] = React.useState('')
