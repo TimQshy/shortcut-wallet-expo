@@ -1,5 +1,5 @@
 import { useSignIn } from '@clerk/expo'
-import { type Href, Link, useRouter } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import React from 'react'
 import {
   Pressable, StyleSheet, Text, TextInput, View,
@@ -24,10 +24,9 @@ export default function SignInPage() {
 
     if (signIn.status === 'complete') {
       await signIn.finalize({
-        navigate: ({ session, decorateUrl }) => {
+        navigate: ({ session }) => {
           if (session?.currentTask) { console.log(session?.currentTask); return }
-          const url = decorateUrl('/')
-          if (url.startsWith('http')) { window.location.href = url } else { router.push(url as Href) }
+          router.replace('/(home)')
         },
       })
     } else if (signIn.status === 'needs_client_trust') {
@@ -42,10 +41,9 @@ export default function SignInPage() {
     await signIn.mfa.verifyEmailCode({ code })
     if (signIn.status === 'complete') {
       await signIn.finalize({
-        navigate: ({ session, decorateUrl }) => {
+        navigate: ({ session }) => {
           if (session?.currentTask) { console.log(session?.currentTask); return }
-          const url = decorateUrl('/')
-          if (url.startsWith('http')) { window.location.href = url } else { router.push(url as Href) }
+          router.replace('/(home)')
         },
       })
     }
