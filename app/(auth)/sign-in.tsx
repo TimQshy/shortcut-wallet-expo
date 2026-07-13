@@ -10,92 +10,30 @@ import { Ionicons } from '@expo/vector-icons'
 import { C, R, S } from '../../constants/theme'
 
 export default function SignInPage() {
-  const { signIn, errors, fetchStatus } = useSignIn()
+  const { signIn, setActive, isLoaded } = useSignIn()
   const router = useRouter()
 
   const [emailAddress, setEmailAddress] = React.useState('')
   const [password, setPassword] = React.useState('')
-  const [code, setCode] = React.useState('')
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState('')
   const [passwordVisible, setPasswordVisible] = React.useState(false)
 
   const handleSubmit = async () => {
-    const { error } = await signIn.password({ emailAddress, password })
-    if (error) { console.error(JSON.stringify(error, null, 2)); return }
-
-    if (signIn.status === 'complete') {
-      await signIn.finalize({
-        navigate: ({ session }) => {
-          if (session?.currentTask) { console.log(session?.currentTask); return }
-          router.replace('/(home)')
-        },
-      })
-    } else if (signIn.status === 'needs_client_trust') {
-      const emailCodeFactor = signIn.supportedSecondFactors.find(
-        (f) => f.strategy === 'email_code',
-      )
-      if (emailCodeFactor) await signIn.mfa.sendEmailCode()
+    if (!isLoaded || loading) return
+    setLoading(true)
+    setError('')
+    try {
+      const result = await signIn.create({ identifier: emailAddress, password })
+      if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId })
+        router.replace('/(home)')
+      }
+    } catch (err: any) {
+      setError(err.errors?.[0]?.message ?? err.message ?? 'Ошибка входа')
+    } finally {
+      setLoading(false)
     }
-  }
-
-  const handleVerify = async () => {
-    await signIn.mfa.verifyEmailCode({ code })
-    if (signIn.status === 'complete') {
-      await signIn.finalize({
-        navigate: ({ session }) => {
-          if (session?.currentTask) { console.log(session?.currentTask); return }
-          router.replace('/(home)')
-        },
-      })
-    }
-  }
-
-  if (signIn.status === 'needs_client_trust') {
-    return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.container}>
-          <View style={styles.illustration}>
-            <View style={styles.illustrationRing}>
-              <Ionicons name="shield-checkmark-outline" size={40} color={C.primaryContainer} />
-            </View>
-          </View>
-          <Text style={styles.title}>Verify your account</Text>
-          <Text style={styles.subtitle}>Enter the code sent to your email</Text>
-
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>VERIFICATION CODE</Text>
-            <TextInput
-              style={styles.input}
-              value={code}
-              placeholder="000000"
-              placeholderTextColor={C.outline}
-              onChangeText={setCode}
-              keyboardType="numeric"
-              textAlign="center"
-            />
-            {errors?.fields?.code && (
-              <Text style={styles.errorText}>{errors.fields.code.message}</Text>
-            )}
-          </View>
-
-          <Pressable
-            style={[styles.primaryBtn, fetchStatus === 'fetching' && styles.btnDisabled]}
-            onPress={handleVerify}
-            disabled={fetchStatus === 'fetching'}
-          >
-            <Text style={styles.primaryBtnText}>Verify</Text>
-          </Pressable>
-          <Pressable
-            style={styles.secondaryBtn}
-            onPress={() => signIn.mfa.sendEmailCode()}
-          >
-            <Text style={styles.secondaryBtnText}>Resend code</Text>
-          </Pressable>
-          <Pressable style={styles.secondaryBtn} onPress={() => signIn.reset()}>
-            <Text style={styles.secondaryBtnText}>Start over</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
-    )
   }
 
   return (
@@ -109,7 +47,6 @@ export default function SignInPage() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Illustration */}
           <View style={styles.illustration}>
             <View style={styles.illustrationRing}>
               <Ionicons name="wallet-outline" size={40} color={C.primaryContainer} />
@@ -119,7 +56,8 @@ export default function SignInPage() {
           <Text style={styles.title}>Welcome back</Text>
           <Text style={styles.subtitle}>Track your finances mindfully.</Text>
 
-          {/* Email */}
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>EMAIL ADDRESS</Text>
             <TextInput
@@ -133,12 +71,8 @@ export default function SignInPage() {
               autoComplete="email"
               returnKeyType="next"
             />
-            {errors?.fields?.identifier && (
-              <Text style={styles.errorText}>{errors.fields.identifier.message}</Text>
-            )}
           </View>
 
-          {/* Password */}
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>PASSWORD</Text>
             <View style={styles.inputWrapper}>
@@ -164,21 +98,18 @@ export default function SignInPage() {
                 />
               </Pressable>
             </View>
-            {errors?.fields?.password && (
-              <Text style={styles.errorText}>{errors.fields.password.message}</Text>
-            )}
           </View>
 
           <Pressable
             style={[
               styles.primaryBtn,
-              (!emailAddress || !password || fetchStatus === 'fetching') && styles.btnDisabled,
+              (!emailAddress || !password || loading) && styles.btnDisabled,
             ]}
             onPress={handleSubmit}
-            disabled={!emailAddress || !password || fetchStatus === 'fetching'}
+            disabled={!emailAddress || !password || loading}
           >
             <Text style={styles.primaryBtnText}>
-              {fetchStatus === 'fetching' ? 'Signing in…' : 'Continue'}
+              {loading ? 'Signing in…' : 'Continue'}
             </Text>
           </Pressable>
 
