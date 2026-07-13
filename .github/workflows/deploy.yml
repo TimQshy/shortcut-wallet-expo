@@ -24,6 +24,7 @@ jobs:
         run: npx expo export --platform web
         env:
           EXPO_BASE_URL: /shortcut-wallet-expo
+          EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
